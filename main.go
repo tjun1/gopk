@@ -23,11 +23,6 @@ func handleError(err error) {
 	}
 }
 
-func openFilename(filename string) {
-	fmt.Println("Open file")
-	fmt.Printf("%v\n", filename)
-}
-
 // 引数にファイルを受け取る
 // ファイルの構造:
 // https://github.com/japan-clojurians/curriculum | japan-clojurians/curriculum
@@ -49,11 +44,6 @@ func main() {
 	if &f != nil {
 		fmt.Printf("param -f: %s\n", *f)
 	}
-	// fmt.Printf("%v", f)
-	// fmt.Printf("NArg: %v\n", flag.NArg())
-	// fmt.Printf("NFlag: %v\n", flag.NFlag())
-
-	openFilename(*f)
 
 	fp, err := os.Open(*f)
 	handleError(err)
