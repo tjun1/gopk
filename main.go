@@ -60,11 +60,10 @@ func main() {
 		line := scanner.Text()
 		// 行を分割してURL部分だけ抽出する
 		seperated_line := strings.Split(line, " |")
-		// 空行を間引く
-		// http:// もしくは https:// から始まる行だけ抽出する
+		// 空行を間引いて http:// もしくは https:// から始まる行だけ抽出する
 		fs := re.FindString(seperated_line[0])
 		if len(fs) != 0 {
-			// https://www.google.com/search?q= にマッチしていたなら除外する
+			// Google系サービスは除外する
 			is_googleSearchURL := googleSearchURLRE.MatchString(fs)
 			is_googleDriveURL := googleDriveURLRE.MatchString(fs)
 			is_googleDocsURL := googleDocslURLRE.MatchString(fs)
@@ -77,14 +76,14 @@ func main() {
 			urls = append(urls, fs)
 		}
 	}
-	// urlsの要素が0個なら終了する
+	// urls の要素が0個、つまり登録するものがなければ終了する
 	if len(urls) == 0 {
 		fmt.Println("No more than one URL was found.")
 		os.Exit(1)
 	}
 
-	// urls を使って getpocket.com に登録する。
-	// タグを今日の日付とする。
+	// TODO: urls を使って getpocket.com に登録する。
+	// TODO: タグを今日の日付とする。
 	for _, u := range urls {
 		fmt.Println(u)
 	}
