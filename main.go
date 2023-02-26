@@ -28,8 +28,6 @@ func handleError(err error) {
 // https://github.com/japan-clojurians/curriculum | japan-clojurians/curriculum
 // <URL>\s\|\s"Description" か 空行 の2種類で構成されている
 func main() {
-	fmt.Println("Hello")
-
 	var (
 		f = flag.String("f", "", "File name with URL listed.")
 	)
@@ -41,28 +39,41 @@ func main() {
 		os.Exit(1)
 	}
 
-	if &f != nil {
-		fmt.Printf("param -f: %s\n", *f)
-	}
-
 	fp, err := os.Open(*f)
 	handleError(err)
 	defer fp.Close()
 
 	scanner := bufio.NewScanner(fp)
 	re := regexp.MustCompile("^http(.*)://(.*)")
+	// https://www.google.com/search?q=
+
+	googleDriveURLRE := regexp.MustCompile(`^https://drive.google.com/(.*)`)
+	googleDocslURLRE := regexp.MustCompile(`^https://docs.google.com/(.*)`)
+	gmailURLRE := regexp.MustCompile(`^https://mail.google.com/`)
+	googleCalendarURLRE := regexp.MustCompile(`https://calendar.google.com/(.*)`)
+	googleSearchURLRE := regexp.MustCompile(`^https://www.google.com/search(.*)`)
+	googleMapURLRE := regexp.MustCompile(`^https://www.google.co.jp/maps(.*)`)
 	urls := []string{}
 
 	// 登録対象とするURLのスライスを作る
 	for scanner.Scan() {
 		line := scanner.Text()
+		// 行を分割してURL部分だけ抽出する
 		seperated_line := strings.Split(line, " |")
 		// 空行を間引く
 		// http:// もしくは https:// から始まる行だけ抽出する
-		// 行を分割してURL部分だけ抽出する
 		fs := re.FindString(seperated_line[0])
 		if len(fs) != 0 {
 			// https://www.google.com/search?q= にマッチしていたなら除外する
+			is_googleSearchURL := googleSearchURLRE.MatchString(fs)
+			is_googleDriveURL := googleDriveURLRE.MatchString(fs)
+			is_googleDocsURL := googleDocslURLRE.MatchString(fs)
+			is_gmailURL := gmailURLRE.MatchString(fs)
+			is_googleCalendarURL := googleCalendarURLRE.MatchString(fs)
+			is_googleMapURL := googleMapURLRE.MatchString(fs)
+			if is_googleSearchURL || is_googleDriveURL || is_googleDocsURL || is_gmailURL || is_googleCalendarURL || is_googleMapURL {
+				continue
+			}
 			urls = append(urls, fs)
 		}
 	}
