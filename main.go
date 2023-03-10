@@ -13,15 +13,6 @@ import (
 	"strings"
 )
 
-// TODO:
-// [x] ファイルを引数で受取る
-// [x] 行を解析してURLだけ抽出する
-// [x] getpocket.com に登録する(レートリミットに注意)
-// [ ] リファクタリングする
-// [ ] ビルドスクリプト(Makefile)を作る
-// [ ] 除外リストを作ってメンテできるようにする
-// [ ] OAuthトークンのリフレッシュを実装する
-// [ ] APIトークンを環境変数から読み取れるようにする
 func handleError(err error) {
 	if err != nil {
 		log.Fatal(err)
@@ -136,8 +127,8 @@ func main() {
 	r := RegisterURL{
 		yahoo,
 		tag,
-		"106320-f11816ace4ac49e05d72fc6",
-		"822886b3-cc45-68e7-d33e-75abd0",
+		コンシューマキー",
+		アクセストークン",
 	}
 	err = doPost(r)
 	if err != nil {
